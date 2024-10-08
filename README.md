@@ -1,36 +1,35 @@
-### IBM MQ Machine Learning Tuning
-
-This system works by splitting up tasks across different computers so that each one does a specific job.
+### Introduction:  
+In large computer systems, it’s important to keep everything running smoothly. This often involves tracking how well the system is using its resources like CPU, memory, and disk space. To make this process more efficient, we can use machine learning to analyze the data collected from these systems and suggest ways to improve performance. In this setup, different parts of the system handle different jobs: one part collects the data, another part does the analysis, and a final part shows the results on a dashboard. Let's look at how each of these pieces works and how they fit together.
 
 ### 1. **Metrics Collector (Data Gatherer)**:
-   - **What it does**: Its job is to gather information from the computer it's on. It looks at things like how much CPU (processing power) is used, memory, disk space, and other system stats, then sends this info to another computer for analysis.
-   - **Important Points**:
-     - **Work fast**: Since this program is running on a computer that's being watched, it shouldn't use too many resources. It should work quickly and quietly.
-     - **Secure the data**: Make sure the data is sent safely using something like HTTPS, so no one can steal important information about the computer's settings.
-     - **Be ready for problems**: If the computer that analyzes the data isn't available, the collector should try again later or save the error.
+   - **What it does**: The collector gathers important data from the computer (like CPU usage, memory, disk space, and system settings) and sends it to the analysis server.
+   - **Things to Keep in Mind**:
+     - **Work Efficiently**: Since the collector is running on the same computer it’s watching, it should use as little processing power as possible. It can be set to check the system at regular intervals or run in the background.
+     - **Keep it Secure**: When sending the data to the analysis server, make sure it’s done safely so no one can steal sensitive information.
+     - **Handle Errors**: If the analysis server is unavailable, the collector should try again later or save the error to be looked at later.
 
 ### 2. **Analysis Server (Data Analyzer)**:
-   - **What it does**: This computer takes the collected information, runs it through a machine learning program (TensorFlow), and gives advice on how to improve performance.
-   - **Machine Learning (ML) Part**:
-     - **Model**: It uses a pre-trained program (`server_health_model.h5`). Keep the program updated with new information so that it stays smart and gives good advice.
-     - **Cleaning the data**: Before the program can look at the data, it needs to make sure it's clean and correct—like making sure there are no missing or wrong numbers.
+   - **What it does**: The analysis server takes the data from the collector, uses machine learning to study it, and then gives recommendations for improving performance.
+   - **Machine Learning Part**:
+     - **Model**: The server uses a pre-trained program (`server_health_model.h5`) to make predictions. Keep this program updated with new data so that it continues to work accurately.
+     - **Prepare the Data**: Before the analysis, the server checks the data to make sure there are no errors, missing numbers, or strange values.
    - **Database (SQLite3)**:
-     - **Storing results**: The server keeps track of all the analyses it does in a simple database. Over time, as more data gets added, it should be organized so it doesn’t slow down.
-     - **Performance**: For small or medium tasks, this database works fine, but for bigger tasks, a more powerful database like PostgreSQL might be needed.
+     - **Store Results**: The server saves the analysis results in a simple database that helps keep track of all past analyses. As the data grows, the system should be organized to keep it fast.
+     - **Performance**: For small to medium amounts of data, SQLite3 is fine. For larger systems, you might need to switch to a more powerful database, like PostgreSQL or MySQL.
 
 ### 3. **Web Console (User Dashboard)**:
-   - **What it does**: This is like the control panel where users can see charts that show the computer's health (CPU, memory, disk usage), start or stop the analysis, and look at past data.
-   - **Setting it up**:
-     - **Charts**: The dashboard shows easy-to-read charts that track how the system is doing over time and offers tips from the analysis server.
-     - **Filters and Reports**: Users can focus on specific times or types of data, and download reports to keep.
-     - **Security**: Make sure only the right people can access this dashboard, since it shows important and private information.
+   - **What it does**: The web console is where users can see easy-to-read charts that show how well the system is running. They can also start or stop analyses and look at past results.
+   - **Setting it Up**:
+     - **Charts**: The web console shows charts that track how the system is using its resources (like CPU, memory, and disk space) and displays recommendations from the analysis server.
+     - **Filters and Reports**: Users can focus on specific time periods or types of data, and download reports if needed.
+     - **Keep it Secure**: Make sure only authorized users can access the console since it contains sensitive information.
 
 ### 4. **General Improvements**:
-   - **Scaling Up**: If you need to monitor more than one computer, make sure the system can handle that by expanding the collector and analysis server.
-   - **Notifications**: Set up alerts that notify users by email or text message if the analysis finds big problems (like low disk space or high CPU usage).
-   - **Monitoring the System**: Keep an eye on the health of both the collector and analysis server to make sure they don’t have problems themselves.
+   - **Scaling Up**: If you need to monitor more computers, the system should be able to handle multiple collectors and expand the analysis server to work with more data.
+   - **Alerts and Notifications**: Set up alerts that notify users by email or text message if the analysis finds major issues, like low disk space or high CPU usage.
+   - **Monitor the System**: Make sure that both the collector and the analysis server are being monitored to catch any problems with the system itself.
 
-### Final Architecture Overview (How it all fits together):
+### Final Architecture Overview:
 
 ```plaintext
 +--------------------+            +---------------------+             +--------------------+
@@ -47,4 +46,4 @@ This system works by splitting up tasks across different computers so that each 
 +-----------------------------------+     +---------------------------------+ 
 ```
 
-This setup splits up the work to make it more secure and easier to manage.
+This setup allows the system to grow, keeps data secure, and organizes the different parts efficiently. 
