@@ -12,14 +12,14 @@
   - [Section 2: Analysis Server](#section-2-analysis-server)
     - [Overview](#overview-1)
     - [Architecture of the Analysis Server](#architecture-of-the-analysis-server)
-    - [Final Architecture Overview](#final-architecture-overview)
+    - [Architecture Overview](#architecture-overview)
     - [Conclusion](#conclusion-1)
   - [Section 3: Web Console (Cube.js)](#section-3-web-console-cubejs)
     - [Overview](#overview-2)
     - [Purpose of the Web Console](#purpose-of-the-web-console)
     - [Architecture Overview](#architecture-overview)
     - [Step-by-Step Guide to Setting Up the Cube.js Web Console](#step-by-step-guide-to-setting-up-the-cubejs-web-console)
-    - [Final Architecture Overview with Cube.js Web Console](#final-architecture-overview-with-cubejs-web-console)
+    - [Architecture Overview with Cube.js Web Console](#architecture-overview-with-cubejs-web-console)
     - [Conclusion](#conclusion-2)
   - [Section 4: General Improvements](#section-4-general-improvements)
     - [Overview](#overview-3)
@@ -599,7 +599,7 @@ To set up Cube.js for the web console, follow these steps:
 
 ---
 
-### Final Architecture Overview
+### Architecture Overview
 
 ```plaintext
 +--------------------+            +---------------------+       +--------------------+
@@ -822,9 +822,9 @@ Now that the Cube.js dashboard is connected to the database, you can extend the 
 
 ---
 
-### Final Architecture Overview with Cube.js Web Console
+### Architecture Overview with Cube.js Web Console
 
-The final architecture now includes the **Web Console**, which pulls data from the **SQLite3** database via Cube.js and presents it in an intuitive, visual format. The system enables centralized monitoring and analysis of server health across multiple machines.
+The architecture now includes the **Web Console**, which pulls data from the **SQLite3** database via Cube.js and presents it in an intuitive, visual format. The system enables centralized monitoring and analysis of server health across multiple machines.
 
 ```plaintext
 +--------------------+            +---------------------+             +--------------------+
