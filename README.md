@@ -1,4 +1,4 @@
-### IBM MQ Machine Learning Tuning (Made Simple)
+### IBM MQ Machine Learning Tuning
 
 This system works by splitting up tasks across different computers so that each one does a specific job. Here's a simple version of how it works and what each part does:
 
