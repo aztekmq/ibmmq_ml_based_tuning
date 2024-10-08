@@ -1,5 +1,53 @@
 # IBM MQ ML Based Tuning: Linux Server Health Monitoring and Analysis System
 
+# Table of Contents
+
+- [IBM MQ ML Based Tuning: Linux Server Health Monitoring and Analysis System](#ibm-mq-ml-based-tuning-linux-server-health-monitoring-and-analysis-system)
+  - [Section 1: Metrics Collector](#section-1-metrics-collector)
+    - [Overview](#overview)
+    - [Objectives of the Metrics Collector](#objectives-of-the-metrics-collector)
+    - [Core Components of the Metrics Collector](#core-components-of-the-metrics-collector)
+      - [CPU Usage Collection](#cpu-usage-collection)
+      - [Memory Usage Collection](#memory-usage-collection)
+      - [Disk Usage Collection](#disk-usage-collection)
+      - [Swap Space Collection](#swap-space-collection)
+      - [Kernel Parameter Collection](#kernel-parameter-collection)
+      - [Data Transmission to the Analysis Server](#data-transmission-to-the-analysis-server)
+    - [Full Metrics Collector Script](#full-metrics-collector-script)
+    - [Conclusion](#conclusion)
+  - [Section 2: Analysis Server](#section-2-analysis-server)
+    - [Overview](#overview-1)
+    - [Architecture of the Analysis Server](#architecture-of-the-analysis-server)
+      - [Flask API for Receiving Data](#flask-api-for-receiving-data)
+      - [TensorFlow Model for Analysis](#tensorflow-model-for-analysis)
+      - [SQLite3 for Storing Results](#sqlite3-for-storing-results)
+      - [Cube.js for the Web Console](#cubejs-for-the-web-console)
+    - [Final Architecture Overview](#final-architecture-overview)
+    - [Conclusion](#conclusion-1)
+  - [Section 3: Web Console (Cube.js)](#section-3-web-console-cubejs)
+    - [Overview](#overview-2)
+    - [Purpose of the Web Console](#purpose-of-the-web-console)
+    - [Architecture Overview](#architecture-overview)
+    - [Step-by-Step Guide to Setting Up the Cube.js Web Console](#step-by-step-guide-to-setting-up-the-cubejs-web-console)
+      - [Installing Cube.js](#installing-cubejs)
+      - [Configuring Cube.js to Connect to SQLite3](#configuring-cubejs-to-connect-to-sqlite3)
+      - [Defining Data Schema in Cube.js](#defining-data-schema-in-cubejs)
+      - [Running Cube.js Server](#running-cubejs-server)
+      - [Creating Visualizations in Cube.js Dashboard](#creating-visualizations-in-cubejs-dashboard)
+      - [Adding Features to the Web Console](#adding-features-to-the-web-console)
+    - [Final Architecture Overview with Cube.js Web Console](#final-architecture-overview-with-cubejs-web-console)
+    - [Conclusion](#conclusion-2)
+  - [Section 4: General Improvements](#section-4-general-improvements)
+    - [Overview](#overview-3)
+    - [Key General Improvements](#key-general-improvements)
+      - [Scalability](#scalability)
+      - [Real-time Notifications and Alerts](#real-time-notifications-and-alerts)
+      - [Security Enhancements](#security-enhancements)
+      - [Monitoring the Monitor](#monitoring-the-monitor)
+      - [Multi-Server Monitoring](#multi-server-monitoring)
+    - [Conclusion](#conclusion-3)
+
+
 ## Section 1: Metrics Collector 
 
 #### Overview
