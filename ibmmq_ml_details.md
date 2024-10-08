@@ -827,10 +827,10 @@ Now that the Cube.js dashboard is connected to the database, you can extend the 
 The final architecture now includes the **Web Console**, which pulls data from the **SQLite3** database via Cube.js and presents it in an intuitive, visual format. The system enables centralized monitoring and analysis of server health across multiple machines.
 
 ```plaintext
-+--------------------+            +---------------------+             +--------------------+
-| Linux Server       |            | Analysis Server      |             | Web Console        |
-| (Metrics Collector)|            | (ML, SQLite, Flask)  |             | (Cube.js Dashboard)|
-+--------------------+            +---------------------+             +--------------------+
++--------------------+            +---------------------+             +-----------------------+
+| Linux Server       |            | Analysis Server      |             | ** Web Console        |
+| (Metrics Collector)|            | (ML, SQLite, Flask)  |             | ** (Cube.js Dashboard)|
++--------------------+            +---------------------+             +-----------------------+
       |                                   |                                   |
       V                                   V                                   V
 +-----------------------------------+     +---------------------------------+ 
