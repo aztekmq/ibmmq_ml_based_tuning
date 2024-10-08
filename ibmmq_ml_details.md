@@ -602,12 +602,12 @@ To set up Cube.js for the web console, follow these steps:
 ### Final Architecture Overview
 
 ```plaintext
-+--------------------+            +---------------------+             +--------------------+
-| Linux Server       |            | Analysis Server      |             | Web Console        |
-| (Metrics Collector)|            | (ML, SQLite, Flask)  |             | (Cube.js Dashboard)|
-+--------------------+            +---------------------+             +--------------------+
-      |                                   |                                   |
-      V                                   V                                   V
++--------------------+            +---------------------+       +--------------------+
+| Linux Server       |            | Analysis Server      |      | Web Console        |
+| (Metrics Collector)|            | (ML, SQLite, Flask)  |      | (Cube.js Dashboard)|
++--------------------+            +---------------------+       +--------------------+
+      |                                      |                          |
+      V                                      V                          V
 +-----------------------------------+     +---------------------------------+ 
 | Collects CPU, Memory, Disk, Swap, |     | Receives Data via API,          |
 | Kernel Params, and sends metrics  |     | Runs TensorFlow Analysis,       |
