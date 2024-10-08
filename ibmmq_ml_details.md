@@ -1,6 +1,6 @@
 # IBM MQ ML Based Tuning: Linux Server Health Monitoring and Analysis System
 
-### Section 1: Metrics Collector 
+## Section 1: Metrics Collector 
 
 #### Overview
 
@@ -310,7 +310,7 @@ This approach ensures minimal impact on the server being monitored while offload
 
 Future improvements could include adding retry mechanisms for failed transmissions, implementing secure transmission protocols (such as HTTPS), and creating a configuration system to allow for flexible metric collection intervals.
 
-### Section 2: Analysis Server 
+## Section 2: Analysis Server 
 
 #### Overview
 
@@ -597,7 +597,7 @@ The **Analysis Server** is the backbone of the **Linux Server Health Monitoring 
 
 This architecture can be expanded to include additional features, such as automated alerts when certain thresholds are reached, advanced visualizations in the Cube.js dashboard, and support for monitoring multiple servers in a distributed environment. By separating the data collection and analysis components, the system remains scalable, secure, and easy to maintain.
 
-### Section 3: Web Console (Cube.js)
+## Section 3: Web Console (Cube.js)
 
 #### Overview
 
@@ -820,7 +820,7 @@ The final architecture now includes the **Web Console**, which pulls data from t
 
 The **Web Console** adds a powerful, user-friendly interface to the **Linux Server Health Monitoring and Analysis System**, allowing users to easily monitor server health, view historical analysis results, and manage their infrastructure through visual dashboards. Built with Cube.js, the console connects directly to the **SQLite3** database to provide real-time and historical data on system performance and health recommendations.
 
-### Section 4: General Improvements
+## Section 4: General Improvements
 
 #### Overview
 
