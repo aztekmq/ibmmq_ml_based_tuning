@@ -1,36 +1,36 @@
-## IBM MQ Machine Learning Based Tuning
+### IBM MQ Machine Learning Tuning (Made Simple)
 
-This architecture effectively separates concerns by distributing the data collection and machine learning analysis across different servers. Here’s a breakdown and some recommendations for the components:
+This system works by splitting up tasks across different computers so that each one does a specific job. Here's a simple version of how it works and what each part does:
 
-### 1. **Metrics Collector**:
-   - **Objective**: The primary task is to gather system metrics (CPU, memory, disk, swap, kernel parameters) from the Linux server under analysis and send them to the analysis server.
-   - **Implementation Considerations**:
-     - **Efficiency**: Since the collector is running on the server being monitored, ensure that it uses minimal resources. Consider a lightweight process that runs periodically (e.g., cron job) or via a daemon.
-     - **Security**: Use secure communication (e.g., HTTPS) when sending metrics to the analysis server to protect sensitive data like server configurations.
-     - **API Requests**: Handle cases where the analysis server might be unavailable by implementing retries or logging errors locally to be reviewed later.
+### 1. **Metrics Collector (Data Gatherer)**:
+   - **What it does**: Its job is to gather information from the computer it's on. It looks at things like how much CPU (processing power) is used, memory, disk space, and other system stats, then sends this info to another computer for analysis.
+   - **Important Points**:
+     - **Work fast**: Since this program is running on a computer that's being watched, it shouldn't use too many resources. It should work quickly and quietly.
+     - **Secure the data**: Make sure the data is sent safely using something like HTTPS, so no one can steal important information about the computer's settings.
+     - **Be ready for problems**: If the computer that analyzes the data isn't available, the collector should try again later or save the error.
 
-### 2. **Analysis Server**:
-   - **Objective**: To analyze the metrics received from the collector using a TensorFlow model and provide recommendations.
-   - **TensorFlow Analysis**:
-     - **Model**: You’re loading a pre-trained model (`server_health_model.h5`). Make sure the model is up-to-date and retrained periodically with new data to ensure its predictions remain accurate.
-     - **Input Data Preprocessing**: Your script handles converting data into a format suitable for TensorFlow. Be mindful of potential discrepancies in the data, such as incorrect units, empty values, or outliers, and clean the data accordingly.
-   - **SQLite3 Database**:
-     - **Schema**: The table structure (`analysis_results`) is simple but sufficient for historical tracking of analyses. Ensure that indexing is enabled on frequently queried columns to maintain performance as the database grows.
-     - **Performance**: Depending on the volume of data, SQLite3 can handle the load for small to medium systems. However, for large-scale deployments, consider using more robust databases like PostgreSQL or MySQL.
+### 2. **Analysis Server (Data Analyzer)**:
+   - **What it does**: This computer takes the collected information, runs it through a machine learning program (TensorFlow), and gives advice on how to improve performance.
+   - **Machine Learning (ML) Part**:
+     - **Model**: It uses a pre-trained program (`server_health_model.h5`). Keep the program updated with new information so that it stays smart and gives good advice.
+     - **Cleaning the data**: Before the program can look at the data, it needs to make sure it's clean and correct—like making sure there are no missing or wrong numbers.
+   - **Database (SQLite3)**:
+     - **Storing results**: The server keeps track of all the analyses it does in a simple database. Over time, as more data gets added, it should be organized so it doesn’t slow down.
+     - **Performance**: For small or medium tasks, this database works fine, but for bigger tasks, a more powerful database like PostgreSQL might be needed.
 
-### 3. **Web Console (Cube.js)**:
-   - **Objective**: To provide a user-friendly interface for visualizing server health history, starting/stopping analysis, and managing historical data.
-   - **Cube.js Setup**:
-     - **Visualization**: Use Cube.js to create dynamic charts that can visually represent CPU, memory, and disk usage over time, along with recommendations made by the analysis server.
-     - **Filters and Reports**: Provide filters that allow users to focus on specific time ranges, metrics, or servers. You can also integrate CSV or PDF export functionality for offline reports.
-     - **Security**: Implement authentication for the web console to restrict access, especially since it controls analysis and displays sensitive system data.
-   
+### 3. **Web Console (User Dashboard)**:
+   - **What it does**: This is like the control panel where users can see charts that show the computer's health (CPU, memory, disk usage), start or stop the analysis, and look at past data.
+   - **Setting it up**:
+     - **Charts**: The dashboard shows easy-to-read charts that track how the system is doing over time and offers tips from the analysis server.
+     - **Filters and Reports**: Users can focus on specific times or types of data, and download reports to keep.
+     - **Security**: Make sure only the right people can access this dashboard, since it shows important and private information.
+
 ### 4. **General Improvements**:
-   - **Scalability**: If you foresee the need to monitor multiple Linux servers, the system should support scalability. For example, you could expand the metrics collector to handle multiple servers and scale out the analysis server by containerizing it using Docker or Kubernetes.
-   - **Alerts and Notifications**: Integrate an alerting mechanism that sends email or SMS notifications if the analysis server detects critical issues (e.g., high CPU or memory usage, disk space running out).
-   - **Monitoring the Monitor**: Ensure that both the metrics collector and the analysis server are being monitored themselves (e.g., with Prometheus and Grafana) to ensure they remain healthy and responsive.
+   - **Scaling Up**: If you need to monitor more than one computer, make sure the system can handle that by expanding the collector and analysis server.
+   - **Notifications**: Set up alerts that notify users by email or text message if the analysis finds big problems (like low disk space or high CPU usage).
+   - **Monitoring the System**: Keep an eye on the health of both the collector and analysis server to make sure they don’t have problems themselves.
 
-### Final Architecture Overview:
+### Final Architecture Overview (How it all fits together):
 
 ```plaintext
 +--------------------+            +---------------------+             +--------------------+
@@ -47,4 +47,4 @@ This architecture effectively separates concerns by distributing the data collec
 +-----------------------------------+     +---------------------------------+ 
 ```
 
-This setup enhances scalability, security, and modularity by decoupling the different components. If you need assistance in further optimizing or adding features like notifications, authentication for the web dashboard, or even extending the machine learning model, feel free to ask!
+This setup splits up the work to make it more secure and easier to manage.
