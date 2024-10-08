@@ -1,6 +1,6 @@
 ### IBM MQ Machine Learning Tuning
 
-This system works by splitting up tasks across different computers so that each one does a specific job. Here's a simple version of how it works and what each part does:
+This system works by splitting up tasks across different computers so that each one does a specific job.
 
 ### 1. **Metrics Collector (Data Gatherer)**:
    - **What it does**: Its job is to gather information from the computer it's on. It looks at things like how much CPU (processing power) is used, memory, disk space, and other system stats, then sends this info to another computer for analysis.
