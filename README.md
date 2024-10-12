@@ -1,5 +1,6 @@
 Architecture Overview: Linux Server Health Monitoring and Analysis System
 
+
 In this revised system, we will separate the data collection and machine learning analysis into different components, following a more scalable and secure architecture. This will allow the server under observation to only collect metrics and send them to a central server for analysis, ensuring the TensorFlow analysis is done on a separate, dedicated machine.
 Components Breakdown
 
