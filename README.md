@@ -13,6 +13,22 @@ The architecture involves three main components:
 
 This architecture allows the Linux server to focus solely on metrics collection while all machine learning and data processing tasks are handled centrally by the **Analysis Server**.
 
+#### Directory structure:
+```
+/path/to/metrics_collector/
+    ├── metrics_collector.py
+/path/to/analysis_server/
+    ├── analysis_server.py
+/path/to/web_console/
+    ├── web_console.py
+    ├── templates/
+    │   ├── layout.html
+    │   ├── dashboard.html
+    │   ├── view_records.html
+    ├── static/
+    │   ├── css/
+    │   │   └── custom.css (optional for additional styling)
+```
 ---
 
 ### 2. **Metrics Collector**
@@ -276,19 +292,6 @@ if __name__ == '__main__':
 
 To create a commercial-looking landing page with **AdminLTE**, you need to create HTML templates for the dashboard and record views. 
 
-#### Directory structure:
-```
-/path/to/web_console/
-├── web_console.py
-├── templates/
-│   ├── layout.html
-│   ├── dashboard.html
-│   ├── view_records.html
-├── static/
-│   ├── css/
-│   │   └── custom.css (optional for additional styling)
-
-```
 
 #### `layout.html` (Base Layout with Side Menu)
 
@@ -301,6 +304,7 @@ To create a commercial-looking landing page with **AdminLTE**, you need to creat
     <title>Server Health Monitoring</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/css/adminlte.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -502,6 +506,188 @@ To create a commercial-looking landing page with **AdminLTE**, you need to creat
 {% endblock %}
 ```
 
+#### `custom.css`
+
+```css
+/* Custom CSS for Web Console */
+
+/* General styling for body */
+body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #343a40;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* Navbar Styling */
+.navbar {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar a {
+    color: #ffffff;
+    font-weight: 500;
+    margin-right: 1rem;
+}
+
+.navbar a:hover {
+    color: #cce5ff;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    background-color: #343a40;
+    color: #ffffff;
+    height: 100vh;
+    padding-top: 20px;
+    position: fixed;
+    width: 220px;
+    top: 0;
+    left: 0;
+}
+
+.sidebar a {
+    padding: 10px 15px;
+    font-size: 1rem;
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    background-color: #495057;
+    color: #ffffff;
+}
+
+.sidebar .active {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+/* Main content area */
+.content-wrapper {
+    margin-left: 220px;
+    padding: 30px;
+    background-color: #ffffff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    color: #343a40;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    padding: 12px;
+    border: 1px solid #dee2e6;
+}
+
+table th {
+    background-color: #007bff;
+    color: #ffffff;
+    text-align: left;
+}
+
+table td {
+    background-color: #f8f9fa;
+    color: #343a40;
+}
+
+/* Dashboard cards */
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    background-color: #ffffff;
+}
+
+.card-header {
+    background-color: #007bff;
+    color: #ffffff;
+    font-weight: bold;
+    padding: 15px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.card-body {
+    padding: 20px;
+    font-size: 1rem;
+    color: #343a40;
+}
+
+.card-footer {
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    padding: 10px;
+}
+
+/* Button styling */
+.btn {
+    background-color: #007bff;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+    color: #ffffff;
+}
+
+/* Form elements */
+input[type="text"], input[type="number"], input[type="date"], select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="submit"] {
+    width: 100%;
+    background-color: #007bff;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* Footer styling */
+.footer {
+    background-color: #343a40;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+```
+
 ---
 
 ### 4. **Styling (Optional)**
@@ -594,15 +780,5 @@ The results of the prediction are stored in the **SQLite3** database for histori
 
 ---
 
-### Complete File Structure
-
-```
-/path/to/metrics_collector/
-    ├── metrics_collector.py
-/path/to/analysis_server/
-    ├── analysis_server.py
-/path/to/web_console/
-    ├── web_console.py
-```
 
 With this structure and code, you can now implement the **Linux Server Health Monitoring and Analysis System** with clear separation of concerns between metrics collection, analysis, and the web interface for managing data.
