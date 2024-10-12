@@ -606,5 +606,3 @@ The results of the prediction are stored in the **SQLite3** database for histori
 ```
 
 With this structure and code, you can now implement the **Linux Server Health Monitoring and Analysis System** with clear separation of concerns between metrics collection, analysis, and the web interface for managing data.
-
-Let me know if you need further assistance or adjustments!
