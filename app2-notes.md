@@ -1,3 +1,7 @@
+To align the directory structure and file contents with the provided **IBM MQ ML-Based Tuning: Linux Server Health Monitoring and Analysis System** outline, I will map the files to their respective sections in the document as follows:
+
+---
+
 # **IBM MQ ML-Based Tuning: Linux Server Health Monitoring and Analysis System**
 
 ## Section 1: Metrics Collector
