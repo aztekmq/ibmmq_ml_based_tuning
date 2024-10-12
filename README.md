@@ -44,7 +44,7 @@ def get_cpu_usage():
     cpu_info = [line for line in result.splitlines() if "Cpu(s)" in line]
     idle_percentage = float(cpu_info[0].split()[7].replace('%id,', ''))
     cpu_usage = 100.0 - idle_percentage
-    return cpu_usage
+    return cpu_usage77
 
 # Function to get disk usage
 def get_disk_usage():
@@ -195,9 +195,6 @@ This server listens on port `5000` and processes system metrics, returning analy
 
 ### 7. **Flask-Admin with AdminLTE and SQLite Integration for Web Console**
 
-**File Name:** `web_console.py`  
-**Location:** `/path/to/web_console/web_console.py`  
-**Port:** `5501`
 
 ### 1. **Dashboard and Menu**
 
@@ -210,6 +207,9 @@ pip install Flask Flask-SQLAlchemy Flask-Admin
 ```
 
 ---
+**File Name:** `web_console.py`  
+**Location:** `/path/to/web_console/web_console.py`  
+**Port:** `5501`
 
 ```python
 from flask import Flask, render_template
@@ -279,14 +279,15 @@ To create a commercial-looking landing page with **AdminLTE**, you need to creat
 #### Directory structure:
 ```
 /path/to/web_console/
-     web_console.py
-     templates/
-        layout.html
-        dashboard.html
-        view_records.html
-     static/
-         css/
-            custom.css (optional for additional styling)
+├── web_console.py
+├── templates/
+│   ├── layout.html
+│   ├── dashboard.html
+│   ├── view_records.html
+├── static/
+│   ├── css/
+│   │   └── custom.css (optional for additional styling)
+
 ```
 
 #### `layout.html` (Base Layout with Side Menu)
@@ -597,13 +598,14 @@ The results of the prediction are stored in the **SQLite3** database for histori
 
 ```
 /path/to/metrics_collector/
-     metrics_collector.py
+    ├── metrics_collector.py
 
 /path/to/analysis_server/
-     analysis_server.py
+    ├── analysis_server.py
 
 /path/to/web_console/
-     web_console.py
+    ├── web_console.py
+
 ```
 
 With this structure and code, you can now implement the **Linux Server Health Monitoring and Analysis System** with clear separation of concerns between metrics collection, analysis, and the web interface for managing data.
