@@ -599,13 +599,10 @@ The results of the prediction are stored in the **SQLite3** database for histori
 ```
 /path/to/metrics_collector/
     ├── metrics_collector.py
-
 /path/to/analysis_server/
     ├── analysis_server.py
-
 /path/to/web_console/
     ├── web_console.py
-
 ```
 
 With this structure and code, you can now implement the **Linux Server Health Monitoring and Analysis System** with clear separation of concerns between metrics collection, analysis, and the web interface for managing data.
