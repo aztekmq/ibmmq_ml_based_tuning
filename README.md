@@ -199,16 +199,29 @@ This server listens on port `5000` and processes system metrics, returning analy
 **Location:** `/path/to/web_console/web_console.py`  
 **Port:** `5501`
 
+### 1. **Dashboard and Menu**
+
+In addition to the existing `Flask-Admin` interface, we will introduce a landing page (dashboard) and a side menu for easy navigation. We will use **AdminLTE** for a polished look and responsive design.
+
+### 2. **Requirements**
+Before proceeding, ensure you have the following Python packages installed:
+```bash
+pip install Flask Flask-SQLAlchemy Flask-Admin
+```
+
+---
+
 ```python
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+import os
 
 # Initialize Flask app
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///server_analysis.db'
-app.config['SECRET_KEY'] = 'your_secret_key'
+app.config['SECRET_KEY'] = os.urandom(24)
 db = SQLAlchemy(app)
 admin = Admin(app, name='Server Health Monitoring', template_mode='bootstrap3')
 
@@ -229,14 +242,286 @@ class AnalysisResult(db.Model):
 admin.add_view(ModelView(MetricsCollector, db.session))
 admin.add_view(ModelView(AnalysisResult, db.session))
 
+# Dashboard Route
+@app.route('/')
+def dashboard():
+    # Get summary data from the database
+    total_metrics = MetricsCollector.query.count()
+    total_analysis = AnalysisResult.query.count()
+    avg_cpu_usage = db.session.query(db.func.avg(MetricsCollector.cpu_usage)).scalar()
+    avg_memory_usage = db.session.query(db.func.avg(MetricsCollector.memory_usage)).scalar()
+
+    return render_template('dashboard.html',
+                           total_metrics=total_metrics,
+                           total_analysis=total_analysis,
+                           avg_cpu_usage=avg_cpu_usage,
+                           avg_memory_usage=avg_memory_usage)
+
+# Route for viewing filtered/sorted records
+@app.route('/view_records')
+def view_records():
+    metrics = MetricsCollector.query.all()
+    analysis_results = AnalysisResult.query.all()
+    return render_template('view_records.html', metrics=metrics, analysis_results=analysis_results)
+
 # Run the Flask app
 if __name__ == '__main__':
-    app.run(host='0
+    app.run(host='0.0.0.0', port=5501)
 
-.0.0.0', port=5501)
 ```
 
-This **Web Console** runs on port `5501` and provides users with the ability to view and manage data through the **Flask-Admin** interface.
+---
+
+### 3. **HTML Templates for the Enhanced UI**
+
+To create a commercial-looking landing page with **AdminLTE**, you need to create HTML templates for the dashboard and record views. 
+
+#### Directory structure:
+```
+/path/to/web_console/
+     web_console.py
+     templates/
+        layout.html
+        dashboard.html
+        view_records.html
+     static/
+         css/
+            custom.css (optional for additional styling)
+```
+
+#### `layout.html` (Base Layout with Side Menu)
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Health Monitoring</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/css/adminlte.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="hold-transition sidebar-mini layout-fixed">
+<div class="wrapper">
+    <!-- Navbar -->
+    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Sidebar Container -->
+    <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <a href="/" class="brand-link">
+            <span class="brand-text font-weight-light">Server Monitoring</span>
+        </a>
+        <div class="sidebar">
+            <nav class="mt-2">
+                <ul class="nav nav-pills nav-sidebar flex-column" role="menu">
+                    <li class="nav-item">
+                        <a href="/" class="nav-link">
+                            <i class="nav-icon fas fa-tachometer-alt"></i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/view_records" class="nav-link">
+                            <i class="nav-icon fas fa-database"></i>
+                            <p>View Records</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/admin" class="nav-link">
+                            <i class="nav-icon fas fa-user-cog"></i>
+                            <p>Admin</p>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">Server Health Monitoring</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Footer -->
+    <footer class="main-footer text-center">
+        <strong>&copy; 2024 Server Health Monitoring.</strong> All rights reserved.
+    </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/3.1.0/js/adminlte.min.js"></script>
+</body>
+</html>
+```
+
+---
+
+#### `dashboard.html` (Landing Page/Dashboard)
+
+```html
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+            <div class="inner">
+                <h3>{{ total_metrics }}</h3>
+                <p>Total Metrics Collected</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-server"></i>
+            </div>
+            <a href="/view_records" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+            <div class="inner">
+                <h3>{{ avg_cpu_usage|round(2) }}%</h3>
+                <p>Average CPU Usage</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-microchip"></i>
+            </div>
+            <a href="/view_records" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+            <div class="inner">
+                <h3>{{ avg_memory_usage|round(2) }} MB</h3>
+                <p>Average Memory Usage</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-memory"></i>
+            </div>
+            <a href="/view_records" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-6">
+        <div class="small-box bg-danger">
+            <div class="inner">
+                <h3>{{ total_analysis }}</h3>
+                <p>Total Analysis Performed</p>
+            </div>
+            <div class="icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <a href="/view_records" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+```
+
+---
+
+#### `view_records.html` (Records Overview)
+
+```html
+{% extends 'layout.html' %}
+
+{% block content %}
+<h2>Metrics and Analysis Results</h2>
+
+<div class="row">
+    <div class="col-md-12">
+        <h4>Metrics</h4>
+        <table class="table
+
+ table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>CPU Usage (%)</th>
+                    <th>Memory Usage (MB)</th>
+                    <th>Disk Usage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for metric in metrics %}
+                <tr>
+                    <td>{{ metric.id }}</td>
+                    <td>{{ metric.cpu_usage }}</td>
+                    <td>{{ metric.memory_usage }}</td>
+                    <td>{{ metric.disk_usage }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h4>Analysis Results</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>CPU Usage (%)</th>
+                    <th>Memory Usage (MB)</th>
+                    <th>Recommendation</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in analysis_results %}
+                <tr>
+                    <td>{{ result.id }}</td>
+                    <td>{{ result.cpu_usage }}</td>
+                    <td>{{ result.memory_usage }}</td>
+                    <td>{{ result.recommendation }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+```
+
+---
+
+### 4. **Styling (Optional)**
+
+If you want to add additional styles, you can place a `custom.css` file inside the `static/css/` directory and reference it in the HTML:
+
+```html
+<link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+```
+
+---
+
+### 5. **Running the App**
+
+To run the enhanced **Web Console**:
+1. Ensure you have your SQLite3 database setup and tables created.
+2. Start the Flask app by running:
+   ```bash
+   python web_console.py
+   ```
+3. Access the app in your browser by visiting `http://<YOUR_SERVER_IP>:5501/`.
 
 ---
 
