@@ -1,10 +1,10 @@
-Here’s the structured content based on the prompts you provided, complete with code snippets and explanations:
+Here is the complete and structured re-write of your **Linux Server Health Monitoring and Analysis System** architecture, with file names, Flask apps using separate port numbers, and explanations for each component.
 
 ---
 
 ### 1. **Introduction of the Architecture**
 
-In the **Linux Server Health Monitoring and Analysis System**, data collection and machine learning analysis are separated into distinct components to ensure scalability and security. 
+In the **Linux Server Health Monitoring and Analysis System**, data collection and machine learning analysis are separated into different components to ensure scalability and security. 
 
 The architecture involves three main components:
 - **Metrics Collector**: Runs on the Linux server being monitored. It collects system metrics and sends them to the **Analysis Server**.
@@ -19,7 +19,10 @@ This architecture allows the Linux server to focus solely on metrics collection 
 
 The **Metrics Collector** is responsible for gathering system metrics such as CPU usage, memory usage, disk space, swap usage, and kernel parameters. These metrics are sent via HTTP to the **Analysis Server** for processing.
 
-#### Python Code for Metrics Collector:
+#### Python Code for Metrics Collector
+
+**File Name:** `metrics_collector.py`  
+**Location:** `/path/to/metrics_collector/metrics_collector.py`
 
 ```python
 import subprocess
@@ -83,7 +86,7 @@ def collect_and_send_data():
         'kernel_params': get_kernel_parameters()
     }
 
-    response = requests.post('http://<ANALYSIS_SERVER_IP>/analyze', json=data)
+    response = requests.post('http://<ANALYSIS_SERVER_IP>:5000/analyze', json=data)
     if response.status_code == 200:
         print("Data successfully sent for analysis")
     else:
@@ -93,7 +96,7 @@ def collect_and_send_data():
 collect_and_send_data()
 ```
 
-This code efficiently collects the necessary metrics from the Linux server and sends them to the **Analysis Server**.
+This code collects the necessary metrics from the Linux server and sends them to the **Analysis Server** at port `5000`.
 
 ---
 
@@ -118,28 +121,21 @@ The **Web Console** uses an **SQLite3** database to manage and store data, ensur
 
 ### 5. **System Diagram**
 
-This diagram illustrates the system architecture:
-
 ```plaintext
 +-----------------------+         +------------------------+         +--------------------------+
 | Linux Server (Metrics  |         | Analysis Server         |         | Web Console               |
 | Collector)             | ----->  | (ML Model, SQLite3,     | ----->  | (Flask-Admin with         |
 |                        |         | Flask Admin with        |         | AdminLTE, SQLite3)        |
-|                        |         | AdminLTE Dashboard)     |         |                          |
 +-----------------------+         +------------------------+         +--------------------------+
 ```
 
 ---
 
-### 6. **Step-by-Step Code for Metrics Collector**
+### 6. **Step-by-Step Code for Analysis Server with TensorFlow**
 
-The code for the **Metrics Collector** is already provided in section 2. It collects the necessary metrics and sends them to the **Analysis Server**.
-
----
-
-### 7. **Step-by-Step Code for Analysis Server with TensorFlow**
-
-Below is the Python code for a Flask-based **Analysis Server** that processes system metrics received from the **Metrics Collector** using a pre-trained **TensorFlow** model and stores the results in **SQLite3**:
+**File Name:** `analysis_server.py`  
+**Location:** `/path/to/analysis_server/analysis_server.py`  
+**Port:** `5000`
 
 ```python
 from flask import Flask, request, jsonify
@@ -193,15 +189,15 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
 ```
 
-This server exposes an endpoint `/analyze` where the **Metrics Collector** can send the collected metrics. The data is processed through a pre-trained TensorFlow model, and the results are stored in **SQLite3**.
+This server listens on port `5000` and processes system metrics, returning analysis results and storing them in **SQLite3**.
 
 ---
 
-### 8. **Flask-Admin with AdminLTE and SQLite Integration for Web Console**
+### 7. **Flask-Admin with AdminLTE and SQLite Integration for Web Console**
 
-**Flask-Admin** with **AdminLTE** is used to create a dashboard for visualizing the analysis results and managing the data stored in **SQLite3**.
-
-#### Flask-Admin Setup:
+**File Name:** `web_console.py`  
+**Location:** `/path/to/web_console/web_console.py`  
+**Port:** `5501`
 
 ```python
 from flask import Flask
@@ -227,9 +223,7 @@ class AnalysisResult(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     cpu_usage = db.Column(db.Float)
     memory_usage = db.Column(db.Integer)
-    recommendation = db.Column(db.String(
-
-200))
+    recommendation = db.Column(db.String(200))
 
 # Add models to Flask-Admin
 admin.add_view(ModelView(MetricsCollector, db.session))
@@ -237,14 +231,16 @@ admin.add_view(ModelView(AnalysisResult, db.session))
 
 # Run the Flask app
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0
+
+.0.0.0', port=5501)
 ```
 
-**Flask-Admin** provides an easy way to visualize and manage metrics and analysis results, making it accessible for users through a web interface.
+This **Web Console** runs on port `5501` and provides users with the ability to view and manage data through the **Flask-Admin** interface.
 
 ---
 
-### 9. **SQLite Setup**
+### 8. **SQLite Setup**
 
 To set up the **SQLite3** database for storing the analysis results:
 
@@ -274,7 +270,7 @@ CREATE TABLE analysis_results (
 
 ---
 
-### 10. **TensorFlow Prediction Explanation**
+### 9. **TensorFlow Prediction Explanation**
 
 **TensorFlow** processes the system metrics received from the **Metrics Collector**. The metrics are passed as input to the pre-trained **TensorFlow** model, which predicts the system's health and provides recommendations such as:
 - **No changes needed**.
@@ -286,4 +282,19 @@ The results of the prediction are stored in the **SQLite3** database for histori
 
 ---
 
-With these sections and code snippets, you can now build a robust **Linux Server Health Monitoring and Analysis System** that efficiently separates data collection and analysis, making the system scalable and secure.
+### Complete File Structure
+
+```
+/path/to/metrics_collector/
+     metrics_collector.py
+
+/path/to/analysis_server/
+     analysis_server.py
+
+/path/to/web_console/
+     web_console.py
+```
+
+With this structure and code, you can now implement the **Linux Server Health Monitoring and Analysis System** with clear separation of concerns between metrics collection, analysis, and the web interface for managing data.
+
+Let me know if you need further assistance or adjustments!

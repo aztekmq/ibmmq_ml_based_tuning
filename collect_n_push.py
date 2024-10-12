@@ -13,9 +13,9 @@ def get_memory_usage():
 
 # Function to get CPU usage
 def get_cpu_usage():
-    result = subprocess.run(['top', '-bn1', '|', 'grep', '"Cpu(s)"'], capture_output=True, shell=True, text=True).stdout
-    cpu_info = result.split()
-    idle_percentage = float(cpu_info[7].replace('%id,', ''))
+    result = subprocess.run(['top', '-bn1'], capture_output=True, shell=True, text=True).stdout
+    cpu_info = [line for line in result.splitlines() if "Cpu(s)" in line]
+    idle_percentage = float(cpu_info[0].split()[7].replace('%id,', ''))
     cpu_usage = 100.0 - idle_percentage
     return cpu_usage
 
@@ -46,35 +46,24 @@ def get_kernel_parameters():
     kernel_params['vm.swappiness'] = int(subprocess.run(['sysctl', '-n', 'vm.swappiness'], capture_output=True, text=True).stdout)
     return kernel_params
 
-# Collect the data
-def collect_data():
-    total_memory, used_memory = get_memory_usage()
-    cpu_usage = get_cpu_usage()
-    total_disk, used_disk = get_disk_usage()
-    total_swap, used_swap = get_swap_usage()
-    kernel_params = get_kernel_parameters()
-
+# Collect and send data to analysis server
+def collect_and_send_data():
     data = {
-        'total_memory': total_memory,
-        'used_memory': used_memory,
-        'cpu_usage': cpu_usage,
-        'total_disk': total_disk,
-        'used_disk': used_disk,
-        'total_swap': total_swap,
-        'used_swap': used_swap,
-        'kernel_params': kernel_params
+        'total_memory': get_memory_usage()[0],
+        'used_memory': get_memory_usage()[1],
+        'cpu_usage': get_cpu_usage(),
+        'total_disk': get_disk_usage()[0],
+        'used_disk': get_disk_usage()[1],
+        'total_swap': get_swap_usage()[0],
+        'used_swap': get_swap_usage()[1],
+        'kernel_params': get_kernel_parameters()
     }
 
-    return data
-
-# Send data to analysis server
-def send_data_to_analysis_server():
-    data = collect_data()
     response = requests.post('http://<ANALYSIS_SERVER_IP>/analyze', json=data)
     if response.status_code == 200:
         print("Data successfully sent for analysis")
     else:
         print("Failed to send data")
 
-# Collect and send data
-send_data_to_analysis_server()
+# Run the collector
+collect_and_send_data()
